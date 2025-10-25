@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stock Toko Erafone MS DG TATA (M131)🔍</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #85cffd;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #FFFFFF;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    #user-name {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: #FFFFFF;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"],
+    input[type="password"],
+    button {
+      padding: 3px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    button {
+      background-color: #7cdeff;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #88eefb;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #6fbcf6;
+      color: white;
+    }
+
+    .low-stock {
+      background-color: #ffeb3b;
+      color: #d32f2f;
+      font-weight: bold;
+    }
+
+    #search-bar {
+      padding: 12px;
+      width: 100%;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+      margin-bottom: 20px;
+      margin-top: 10px;
+    }
+
+    /* Modal */
+    .modal {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      z-index: 9999;
+    }
+
+    .modal-content {
+      background-color: rgb(255, 255, 255);
+      padding: 13px;
+      border-radius: 30px;
+      width: 80%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+     footer {
+        text-align: center;
+        padding: 20px;
+        background-color: transparent;
+        color: white;
+    }
+    footer a {
+        color: white;
+        text-decoration: none;
+    }
+    
+  </style>
+</head>
+<body>
+  <!-- Modal Login -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <h2>Login</h2>
+      <div id="errorMsg" class="error"></div>
+      <form id="loginForm">
+        <input type="text" id="nama" placeholder="Masukkan nama" required />
+        <input type="password" id="password" placeholder="Masukkan password" required />
+        <button type="submit">Masuk</button>
+      </form>
+    </div>
+  </div>
+
+  <h1>STOCK TOKO ERAFONE MS DG TATA (M131)📱</h1>
+  <div id="user-name"></div>
+  <div id="last-update">Terakhir diperbarui: -</div>
+  <input type="text" id="search-bar" placeholder="Cari barang..." oninput="filterItems()" />
+
+  <table>
+    <thead>
+      <tr>
+        <th>Material</th>
+        <th>Description</th>
+        <th>Stok Masuk</th>
+        <th>Stok Keluar</th>
+        <th>Total</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="tabel-barang">
+      <tr>
+        <td colspan="6">Silakan login untuk melihat data</td>
+      </tr>
+    </tbody>
+
+  </table>
+
+  <script>
+    const PASSWORD_BENAR = "Daengtata123";
+    const NAMA_DIIJINKAN = ["Rahmat", "Janwar"];
+
+    const sheetID = "18tcdlYaStgyHQmMBIras5nIJWDD9ByAIXudia1-BCvE";
+    const sheetName = "Sheet1";
+    const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+
+    const lastUpdate = document.getElementById("last-update");
+    const tabelBarang = document.getElementById("tabel-barang");
+    const searchInput = document.getElementById("search-bar");
+
+    // Filter barang
+    function filterItems() {
+      const searchQuery = searchInput.value.toLowerCase();
+      const rows = tabelBarang.getElementsByTagName("tr");
+      for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName("td");
+        if (cells.length > 0) {
+          const material = cells[0].textContent.toLowerCase();
+          const description = cells[1].textContent.toLowerCase();
+          if (material.includes(searchQuery) || description.includes(searchQuery)) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+      }
+    }
+
+    // Login form handler
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const nama = document.getElementById("nama").value.trim();
+      const password = document.getElementById("password").value;
+      const errorMsg = document.getElementById("errorMsg");
+
+      if (password !== PASSWORD_BENAR) {
+        errorMsg.textContent = "Password salah!";
+        return;
+      }
+
+      if (!NAMA_DIIJINKAN.includes(nama)) {
+        errorMsg.textContent = "Nama Kamu tidak terdaftar";
+        return;
+      }
+
+      document.getElementById("user-name").textContent = "Selamat Datang " + nama +"!";
+      document.getElementById("loginModal").style.display = "none";
+      loadData();
+    });
+
+    // Load data dari Google Sheets
+    function loadData() {
+      fetch(url)
+        .then((res) => res.text())
+        .then((data) => {
+          const json = JSON.parse(data.substr(47).slice(0, -2));
+          const rows = json.table.rows;
+          tabelBarang.innerHTML = "";
+
+          rows.forEach((row) => {
+            const cells = row.c;
+            const material = cells[0]?.v || "-";
+            const description = cells[1]?.v || "-";
+            const stokMasuk = parseInt(cells[2]?.v || 0);
+            const stokKeluar = parseInt(cells[3]?.v || 0);
+            const total = stokMasuk - stokKeluar;
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${material}</td>
+              <td>${description}</td>
+              <td>${stokMasuk}</td>
+              <td>${stokKeluar}</td>
+              <td class="${total === 1 ? 'low-stock' : ''}">${total}</td>
+              <td>-</td>
+            `;
+            tabelBarang.appendChild(tr);
+          });
+
+          const now = new Date();
+          lastUpdate.textContent = "Terakhir diperbarui: " + now.toLocaleString();
+        })
+        .catch((err) => {
+          console.error("Gagal memuat data spreadsheet:", err);
+          tabelBarang.innerHTML = "<tr><td colspan='6'>Gagal memuat data.</td></tr>";
+        });
+    }
+  </script>
+      <footer><p>&copy;Website Stock By M Faisal Sadli</p></footer>
+</body>
+</html>
+
+
+
+
